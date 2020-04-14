@@ -12,10 +12,6 @@ pipeline {
         timestamps()
     }
 
-    environment {
-      PATH="/var/lib/jenkins/miniconda3/bin:$PATH"
-    }
-
     stages {
 
         stage ("Code pull"){
@@ -48,14 +44,13 @@ pipeline {
                         pylint irisvmpy || true
                     '''
             }
+            steps {
+                echo ""Extract test results""
+                sh  ''' cobertura coberturaReportFile: 'reports/coverage.xml'
+                    '''
+            }
 
         }
-
-        stage ("Extract test results") {
-              cobertura coberturaReportFile: 'reports/coverage.xml'
-          }
-
-
 
         stage('Unit tests') {
             steps {
@@ -64,21 +59,13 @@ pipeline {
                     '''
             }
 
+            steps {
+              echo ""Extract test results""
+                sh  ''' cobertura coberturaReportFile: 'reports/unit_tests.xml'
+                    '''
+            }
 
         }
-
-        stage ("Extract Unit test results") {
-              cobertura coberturaReportFile: 'reports/unit_tests.xml'
-          }
-
-
-
-        // stage("Deploy to PyPI") {
-        //     steps {
-        //         sh """twine upload dist/*
-        //         """
-        //     }
-        // }
     }
 
 
