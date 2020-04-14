@@ -22,14 +22,13 @@ pipeline {
 
         stage('Build environment') {
             steps {
-                echo "Building virtualenv"
-                sh ''' echo ${SHELL}
-                       [-d venv ] && rm -rf venv
-                       virtualenv venv
-                       . venv/bin/activate
-                       pip install -r requirements/dev.txt
-                             '''
-                      }
+              echo "Building virtualenv"
+              sh ''' echo ${SHELL} [-d venv ] && rm -rf venv
+                     virtualenv venv
+                     . venv/bin/activate
+                     pip install -r requirements/dev.txt
+                           '''
+                    }
         }
 
         stage('Static code metrics') {
@@ -44,11 +43,6 @@ pipeline {
                         pylint irisvmpy || true
                     '''
             }
-            steps {
-                echo ""Extract test results""
-                sh  ''' cobertura coberturaReportFile: 'reports/coverage.xml'
-                    '''
-            }
 
         }
 
@@ -59,12 +53,7 @@ pipeline {
                     '''
             }
 
-            steps {
-              echo ""Extract test results""
-                sh  ''' cobertura coberturaReportFile: 'reports/unit_tests.xml'
-                    '''
-            }
-
+  
         }
     }
 
